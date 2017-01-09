@@ -52,7 +52,8 @@ We map the modules over that thing, and add all returned items to a menu.
 ## api
 
 `needs` does not specify number of deps. It only ever wants one value for a dependency (an array is still a value).
-`source` or 'through' There should be only one module that gives a dependency. It should be a pullstream source. If you have multiple modules with opinions it's up to you to reduce them down to one. 
+
+There should be only one module that gives a dependency. It should be a pullstream source. If you have multiple modules with opinions it's up to you to reduce them down to one. 
 
 ```js
 var combine = require('depject')
@@ -60,29 +61,29 @@ var pipe = require('depject/pipe')
 var pull = require('pull-stream')
 
 var hi = {
-  source: 'hello', //source is like gives
+  gives: 'hello', 
   create: function () {
-    return pull.once(function (name) {
+    return function (name) {
       return (name)
-    })
+    }
   }
 }
 
 var capitalize = {
-  through: 'hello',
+  gives: 'hello',
   create: function () {
-    return pull.map(function (name) {
+    return function (name) {
       return name.toUpperCase()
-    })
+    }
   }
 }
 
 var greet = {
-  through: 'hello',
+  gives: 'hello',
   create: function () {
-    return pull.map(function (name) {
+    return function (name) {
       return 'Hello, '+name
-    })
+    }
   }
 }
 
@@ -99,20 +100,20 @@ var pipe = require('depject/flatten')
 var pull = require('pull-stream')
 
 var english = {
-  source: 'greetings', //source is like gives
+  gives: 'greetings', 
   create: function (sockets) {
-    return pull.once(function (name) {
+    return (function (name) {
       return `hello ${name}`
-    })
+    }
   }
 }
 
 var es = {
-  source: 'greetings', //source is like gives
+  gives: 'greetings', 
   create: function (sockets) {
-    return pull.once(function (name) {
+    return (function (name) {
       return `hola ${name}`
-    })
+    }
   }
 }
 
