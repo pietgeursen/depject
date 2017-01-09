@@ -16,11 +16,19 @@ It also untangles the actual dependency injection from the decisions about HOW t
 
 ## api
 
-`needs` Only ever wants one value for a dependency (an array is still a value).
+Each module is an object which exposes `{needs, gives, create}` properties.
+`needs` and `gives` describe the module features that this module requires,
+and exports.
 
-`gives` If there are multiple modules that `gives` opinions about the same thing then they must be combined down into one opinion before being passed to `combine`.
+`needs` Is a string name of it's export, or if there are multiple exports an object where each key is a name `{<name>: true,...}`. Only ever wants one value for a dependency (an array is still a value).
+
+`gives` Is a string name of it's export, or if there are multiple exports an object where each key is a name `{<name>: true,...}`. If there are multiple modules that `gives` opinions about the same thing then they must be combined down into one opinion before being passed to `combine`.
+
+`create` is a function that is called with an object connected to modules which provide
+the `needs` and must return a value which provides the `gives` or an object with keys that match what the module gives. 
 
 `combine` Takes an array of objects that have the keys `create` (mandatory), `gives` (optional) and `needs` (optional).
+
 
 ## Example - Decorating an opinion
 
@@ -89,79 +97,6 @@ var greetings = flatten('greetings', [english, es]) //order would matter
 
 combine([greetings])[0]('dominic')
 ```
-Each module is an object which exposes `{needs, gives, create}` properties.
-`needs` and `gives` describe the module features that this module requires,
-and exports.
-
-`gives` is a sting name of it's export, or if there are multiple exports,
-and object where each key is a name `{<name>: true,...}`.
-
-`needs` is an object where each key is a name. `{<name> : true,...}`
-
-`create` is a function that is called with an object connected to modules which provide
-the `needs` and must return a value which provides the `gives`. 
-
-### combine
-
-actually connect all the modules together!
-
-`combine([modules...])`
-
-this will return an array object of arrays of plugs.
-
-### design questions
-
-should `combine` have a way to specify the public interface?
-should there be a way to create a routed plugin?
-i.e. check a field and call a specific plugin directly?
-how does this interact with interfaces provided remotely,
-i.e. muxrpc?
-
-## example
-
-
-## api
-
-### combine ([modules...])
-
-takes an array of modules and plugs every plug into the relavant socket.
-
-## graphs!
-
-once you have assembled the modules, you may also generate a `.dot` file of the
-module graph, which can be interesting too look at.
-
-``` js
-//graph.js
-console.log(require('depject/graph')(modules))
-```
-
-then run it through `dot`
-
-`node graph.js | dot -Tsvg > graph.svg`
-
-see also [patchbay graph](https://github.com/dominictarr/patchbay/blob/master/graph.svg)
-
 ## License
 
 MIT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
