@@ -54,7 +54,7 @@ We map the modules over that thing, and add all returned items to a menu.
 `needs` does not specify number of deps. It only ever wants one value for a dependency (an array is still a value).
 `source` or 'through' There should be only one module that gives a dependency. It should be a pullstream source. If you have multiple modules with opinions it's up to you to reduce them down to one. 
 
-```
+```js
 var combine = require('depject')
 var pipe = require('depject/pipe')
 var pull = require('pull-stream')
@@ -93,7 +93,7 @@ combine([hello]).hello[0]('dominic')
 ```
 Why is that better? In dominic's example, the person who wrote the `hi` module had to have the forsight to need a decorator. 
 This new api gives the control to the future authors on how to combine modules. It also untangles the actual dependency injection from the decisions about HOW to combine them.  
-```
+```js
 var combine = require('depject')
 var pipe = require('depject/flatten')
 var pull = require('pull-stream')
